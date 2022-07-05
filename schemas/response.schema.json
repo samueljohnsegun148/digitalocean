@@ -1,0 +1,21 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://image.a11y.mcgill.ca/response.schema.json",
+    "title": "IMAGE Response",
+    "type": "object",
+    "description": "Response of renderings of a graphic given certain conditions.",
+    "properties": {
+        "request_uuid": { "$ref": "definitions.json#/definitions/request_uuid" },
+        "timestamp": { "$ref": "definitions.json#/definitions/timestamp" },
+        "renderings": {
+            "description": "The renderings returned by the server along with additional information.",
+            "type": "array",
+            "items": { "$ref": "definitions.json#/definitions/rendering" }
+        }
+    },
+    "required": [
+        "request_uuid",
+        "timestamp",
+        "renderings"
+    ]
+}

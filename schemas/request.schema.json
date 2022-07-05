@@ -1,0 +1,135 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema",
+    "$id": "https://image.a11y.mcgill.ca/request.schema.json",
+    "title": "IMAGE Request",
+    "type": "object",
+    "description": "Request for renderings of a graphic or a map given certain conditions.",
+    "properties": {
+        "request_uuid": { "$ref": "definitions.json#/definitions/request_uuid" },
+        "timestamp": { "$ref": "definitions.json#/definitions/timestamp" },
+        "graphic": {
+            "description": "Data URL of the base 64 graphic being handled.",
+            "type": "string",
+            "pattern": "^data:image/[^;]+;base64,[a-zA-Z0-9+/=]+$"
+        },
+        "highChartsData": {
+            "type": "object",
+            "description": "Chart data in the HighCharts format (https://api.highcharts.com/highcharts/)"
+        },
+        "dimensions": {
+            "description": "The width and height of the graphic as requested in pixels.",
+            "type": "array",
+            "items": [
+                { "type": "integer", "exclusiveMinimum": 0 },
+                { "type": "integer", "exclusiveMinimum": 0 }
+            ],
+            "minItems": 2,
+            "additionalItems": false
+        },
+        "coordinates": {
+            "description": "WGS 84 representation of the location identified in a map",
+            "type": "object",
+            "properties": {
+                "latitude": {
+                    "type": "number",
+                    "minimum": -90,
+                    "maximum": 90
+                },
+                "longitude": {
+                    "type": "number",
+                    "minimum": -180,
+                    "maximum": 180
+                }
+            },
+            "required": [ "latitude", "longitude" ]
+        },
+        "placeID": {
+            "description": "The Google place ID of the location identified in a map.",
+            "type": "string"
+        },
+        "context": {
+            "description": "Serialized XML of the source node and possibly related nodes.",
+            "type": "string"
+        },
+        "URL": {
+            "description": "URL of the page the request was generated from.",
+            "type": "string",
+            "pattern": "^https?://(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,}\\.[a-z]{2,}\\b(\\S*)$"
+        },
+        "language": {
+            "description": "Language requested by the user as ISO 639-1.",
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2
+        },
+        "capabilities": {
+            "description": "The capabilities available to handlers based on the user, hardware, and software.",
+            "type": "array",
+            "items": {
+                "$ref": "definitions.json#/definitions/capability"
+            },
+            "uniqueItems": true
+        },
+        "renderers": {
+            "description": "Renderers supported by the client.",
+            "type": "array",
+            "items": {
+                "$ref": "definitions.json#/definitions/renderer"
+            },
+            "uniqueItems": true
+        },
+        "preprocessors": {
+            "description": "Additional data added by preprocessors AFTER the request is sent. Preprocessor data are indexed via a reverse domain name identifier",
+            "type": "object",
+            "propertyNames": {
+                "pattern": "^[A-Za-z]{2,6}(\\.((?!-)[A-Za-z0-9-]+(?<!-)))+$"
+            }
+        }
+    },
+    "oneOf": [
+        {
+            "required": [
+                "request_uuid",
+                "language",
+                "timestamp",
+                "graphic",
+                "dimensions",
+                "context",
+                "capabilities",
+                "renderers"
+            ]
+        },
+        {
+            "required": [
+                "request_uuid",
+                "language",
+                "timestamp",
+                "coordinates",
+                "context",
+                "capabilities",
+                "renderers"
+            ]
+        },
+        {
+            "required": [
+                "request_uuid",
+                "language",
+                "timestamp",
+                "placeID",
+                "context",
+                "capabilities",
+                "renderers"
+            ]
+        },
+        {
+            "required": [
+                "request_uuid",
+                "language",
+                "timestamp",
+                "highChartsData",
+                "capabilities",
+                "renderers"
+            ]
+        }
+    ]
+}
