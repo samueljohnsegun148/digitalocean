@@ -11,8 +11,8 @@ from overpy.exception import (
     OverpassGatewayTimeout,
     OverpassRuntimeError,
 )
- 
- 
+
+
 def create_bbox_coordinates(distance, lat, lon):
     assert distance > 0
     assert lat >= -90.0 and lat <= 90.0
@@ -33,8 +33,8 @@ def create_bbox_coordinates(distance, lat, lon):
     lat_max, lon_max = degrees(lat_max), degrees(lon_max)
     bbox_coordinates = [lat_min, lon_min, lat_max, lon_max]
     return bbox_coordinates
- 
- 
+
+
 def get_streets(bbox_coord):
     lat_min, lon_min = bbox_coord[0], bbox_coord[1]
     lat_max, lon_max = bbox_coord[2], bbox_coord[3]
@@ -62,14 +62,14 @@ def get_streets(bbox_coord):
         logging.error(error)
     else:
         return (OSM_data)
- 
- 
+
+
 def get_timestamp():
     d = datetime.now()
     timestamp = int(datetime.timestamp(d))
     return timestamp
- 
- 
+
+
 def process_streets_data(OSM_data):
     """Retrieve inteterested street information from the requested OSM data"""
     try:
@@ -116,13 +116,13 @@ def process_streets_data(OSM_data):
         logging.error(error)
     else:
         return processed_OSM_data
- 
- 
+
+
 def compare_street(street1, street2):  # Compare two streets
     intersecting_points = [x for x in street1 if x in street2]
     return intersecting_points
- 
- 
+
+
 def extract_street(processed_OSM_data):  # extract two streets
     intersection_record = []
     for i in range(len(processed_OSM_data)):
@@ -195,8 +195,8 @@ def extract_street(processed_OSM_data):  # extract two streets
         # unique_set.append(inter_sets[item])
         intersection_record_updated[obj]["intersection_nodes"] = unique_set
     return (intersection_record_updated)
- 
- 
+
+
 def allot_intersection(processed_OSM_data, inters_rec_up
                        ):  # iterate & indicate common nodes
     processed_OSM_data1 = deepcopy(processed_OSM_data)
@@ -232,8 +232,8 @@ def allot_intersection(processed_OSM_data, inters_rec_up
                             else:
                                 f["name"] = f"{id1} intersects {id2}"
     return processed_OSM_data1
- 
- 
+
+
 def get_amenities(bbox_coord):
     # Send request to OSM to get amenities which are part of
     # points of interest (POIs)
@@ -276,8 +276,8 @@ def get_amenities(bbox_coord):
             amenity_record = dict(x for x in amenity_record.items() if all(x))
             amenity.append(amenity_record)
         return amenity
- 
- 
+
+
 def enlist_POIs(processed_OSM_data1, amenity):
     # Keep all identified points of interest in a single list
     POIs = []
@@ -291,12 +291,12 @@ def enlist_POIs(processed_OSM_data1, amenity):
                     if nodes[node]["cat"]:  # ensure the "cat" key has a value
                         POIs.append(nodes[node])
     if amenity is not None and len(amenity) != 0:
-        #POIs = [objs for objs in amenity]
+        # POIs = [objs for objs in amenity]
         for objs in range(len(amenity)):
             POIs.append(amenity[objs])
     return POIs  # POIs is a list of all points of interest
- 
- 
+
+
 def OSM_preprocessor(processed_OSM_data, POIs, amenity):
     id_list, node_list, POI_id_list = [], [], []
     processed_OSM_data2 = deepcopy(processed_OSM_data)
@@ -400,10 +400,10 @@ def OSM_preprocessor(processed_OSM_data, POIs, amenity):
                                             nodes[node]["POIs_iD"] = merged_id
                                         else:
                                             nodes[node]["POIs_ID"] = existingid
- 
+
     return processed_OSM_data2
- 
- 
+
+
 def validate(schema, data, resolver, json_message, error_code):
     """
     Validate a piece of data against a schema
@@ -423,8 +423,8 @@ def validate(schema, data, resolver, json_message, error_code):
         logging.error(error)
         return jsonify(json_message), error_code
     return None
- 
- 
+
+
 def get_coordinates(content):
     """
     Retrieve the coordinates of a map from the
