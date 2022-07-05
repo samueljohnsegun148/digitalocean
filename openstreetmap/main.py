@@ -1,7 +1,7 @@
 from flask import Flask, jsonify, request
 import jsonschema
 import json
-import time
+# import time
 import logging
 from osm_service import (
     get_streets,
@@ -18,14 +18,14 @@ from osm_service import (
 )
 """
 from werkzeug.middleware.profiler import ProfilerMiddleware
- 
+
 app = Flask(__name__)
 app.config["DEBUG"] = True
-app.wsgi_app = ProfilerMiddleware(app.wsgi_app, restrictions=[12], profile_dir='.')
+app.wsgi_app=ProfilerMiddleware(app.wsgi_app,restrictions=[12],profile_dir='.')
 """
 app = Flask(__name__)
- 
- 
+
+
 @app.route('/preprocessor', methods=['POST', ])
 def get_map_data():
     """
@@ -50,24 +50,24 @@ def get_map_data():
     # Validate incoming request
     resolver = jsonschema.RefResolver.from_schema(
         request_schema, store=schema_store)
- 
+
     validated = validate(
         schema=request_schema,
         data=content,
         resolver=resolver,
         json_message="Invalid Request JSON format",
         error_code=400)
- 
+
     if validated is not None:
         return validated
- 
+
     # Build OpenStreetMap request
     coords = get_coordinates(content)
     if coords is None:
         error = 'Unable to find Lat/Lng'
         logging.error(error)
         return jsonify(error), 400
- 
+
     latitude = coords["latitude"]
     longitude = coords["longitude"]
     distance: float = 100
@@ -102,17 +102,17 @@ def get_map_data():
             }
         else:
             response = {
-            "request_uuid": request_uuid,
-            "timestamp": int(get_timestamp()),
-            "name": "ca.mcgill.a11y.image.preprocessor.openstreetmap",
-            "data": []
-        }
-    elif OSM_data is None and amenity is not None:
-        response = {
                 "request_uuid": request_uuid,
                 "timestamp": int(get_timestamp()),
                 "name": "ca.mcgill.a11y.image.preprocessor.openstreetmap",
-                "data": {"points_of_interest": amenity}
+                "data": []
+            }
+    elif OSM_data is None and amenity is not None:
+        response = {
+            "request_uuid": request_uuid,
+            "timestamp": int(get_timestamp()),
+            "name": "ca.mcgill.a11y.image.preprocessor.openstreetmap",
+            "data": {"points_of_interest": amenity}
         }
     else:
         response = {
@@ -127,12 +127,12 @@ def get_map_data():
         resolver=resolver,
         json_message='Invalid Preprocessor JSON format',
         error_code=500)
- 
+
     if validated is not None:
         return validated
     logging.debug("Sending response")
     return response
-    
+
+
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=8080, debug=True)
- 
