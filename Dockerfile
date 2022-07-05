@@ -20,6 +20,4 @@ EXPOSE 8080
 
 ENV FLASK_APP=main.py
 USER python
-#ENTRYPOINT [ "/bin/bash", "-l", "-c" ]
-#CMD ["gunicorn --workers 3 --threads $THREADS --timeout 360 --bind :0.0.0.0:8080 run:app"]
 CMD [ "gunicorn", "main:app", "-b", "0.0.0.0:8080", "--capture-output", "--log-level=debug" ]
