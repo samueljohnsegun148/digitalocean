@@ -1,2 +1,1 @@
-# digitalocean
-Connecting GitHub repo to Digital Ocean
+## Conneting github to digitalocean ,,,
